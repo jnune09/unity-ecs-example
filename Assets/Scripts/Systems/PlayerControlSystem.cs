@@ -4,7 +4,6 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
-using static Unity.Mathematics.math;
 
 public class PlayerControlSystem : JobComponentSystem
 {
@@ -14,7 +13,7 @@ public class PlayerControlSystem : JobComponentSystem
 
         public void Execute([ReadOnly] ref PlayerInput playerInput, ref Velocity velocity)
         {
-            float3 direction = Unity.Mathematics.float3.zero;
+            float3 direction = float3.zero;
 
             if (playerInput.MoveUp)
             {

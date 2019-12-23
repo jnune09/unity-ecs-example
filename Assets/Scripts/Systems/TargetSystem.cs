@@ -4,7 +4,6 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
-using static Unity.Mathematics.math;
 
 public class TargetSystem : JobComponentSystem
 {
@@ -26,7 +25,7 @@ public class TargetSystem : JobComponentSystem
         {
             float3 position = translation.Value;
             Entity target = Entity.Null;
-            float3 targetPosition = Unity.Mathematics.float3.zero;
+            float3 targetPosition = float3.zero;
 
             for (int i =0; i < targetWithPositionArray.Length; i++)
             {

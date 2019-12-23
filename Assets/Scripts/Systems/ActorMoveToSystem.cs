@@ -4,7 +4,6 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
-using static Unity.Mathematics.math;
 
 public class ActorMoveToSystem : JobComponentSystem
 {
@@ -26,7 +25,7 @@ public class ActorMoveToSystem : JobComponentSystem
 
             if (math.distance(translation.Value, targetTranslation.Value) > 1f)
             {
-                velocity.Direction = math.normalize(targetTranslation.Value - translation.Value);
+                velocity.Direction = targetTranslation.Value - translation.Value;
             }
             else
             {

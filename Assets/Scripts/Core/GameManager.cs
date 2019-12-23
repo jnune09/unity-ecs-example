@@ -20,13 +20,13 @@ public class GameManager : MonoBehaviour
     {
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-        SpawnPlayer();
-
         for (int i = 0; i < 1000; i++)
         {
             //SpawnPlayer();
             SpawnActor();
         }
+
+        SpawnPlayer();
 
     }
 
