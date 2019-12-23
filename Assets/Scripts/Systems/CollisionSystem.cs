@@ -9,11 +9,11 @@ using static Unity.Mathematics.math;
 public class CollisionSystem : JobComponentSystem
 {
     [BurstCompile]
-    struct CollisionSystemJob : IJobForEachWithEntity<AABB, MoveSpeed>
+    struct CollisionSystemJob : IJobForEachWithEntity<AABB>
     {
         [ReadOnly] public NativeArray<AABB> colliders;
 
-        public void Execute(Entity entity, int index, ref AABB aabb, ref MoveSpeed moveSpeed)
+        public void Execute(Entity entity, int index, ref AABB aabb)
         {
             for (int j = index + 1; j < colliders.Length; j++)
             {

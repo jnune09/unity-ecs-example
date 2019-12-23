@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
         SpawnPlayer();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 1; i++)
         {
             //SpawnPlayer();
             SpawnActor();
@@ -37,13 +37,13 @@ public class GameManager : MonoBehaviour
             typeof(AABB),
             typeof(Hunger),
             typeof(LocalToWorld),
-            typeof(MoveSpeed),
             typeof(RenderMesh),
-            typeof(Translation)
+            typeof(Translation),
+            typeof(Velocity)
             );
 
         entityManager.SetComponentData(player, new Hunger { Value = 10 });
-        entityManager.SetComponentData(player, new MoveSpeed { Value = 6f });
+        entityManager.SetComponentData(player, new Velocity { Speed = 6f });
         entityManager.SetComponentData(player, new Translation { Value = new float3(UnityEngine.Random.Range(-10, 10), 5, 0) });
         entityManager.SetSharedComponentData(player, new RenderMesh { mesh = quadMesh, material = playerMaterial });
     }
@@ -55,14 +55,14 @@ public class GameManager : MonoBehaviour
             typeof(AABB),
             typeof(Hunger),
             typeof(LocalToWorld),
-            typeof(MoveSpeed),
             typeof(RenderMesh),
             typeof(State),
-            typeof(Translation)
+            typeof(Translation),
+            typeof(Velocity)
             );
 
         entityManager.SetComponentData(actor, new Hunger { Value = 10 });
-        entityManager.SetComponentData(actor, new MoveSpeed { Value = 4f });
+        entityManager.SetComponentData(actor, new Velocity { Speed = 4f });
         entityManager.SetComponentData(actor, new Translation { Value = new float3(UnityEngine.Random.Range(-10, 10), 0, 0) });
         entityManager.SetSharedComponentData(actor, new RenderMesh { mesh = quadMesh, material = actorMaterial });
     }

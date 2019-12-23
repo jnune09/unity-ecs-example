@@ -9,33 +9,40 @@ using static Unity.Mathematics.math;
 public class ActorMoveToSystem : JobComponentSystem
 {
 
-    [BurstCompile]
-    struct ActorMoveToSystemJob : IJobForEach<Destination, Translation, MoveSpeed>
+    //[BurstCompile]
+    struct ActorMoveToSystemJob : IJobForEach<Target, Translation, Velocity>
     {
         public float deltaTime;
+        [ReadOnly] public ComponentDataFromEntity<Translation> translationData;
         
-        public void Execute([ReadOnly] ref Destination destination, ref Translation translation, ref MoveSpeed moveSpeed)
+        public void Execute([ReadOnly] ref Target target, [ReadOnly] ref Translation translation, ref Velocity velocity)
         {
-            float3 targetDirection = math.normalize(destination.Value - translation.Value);
-
-            translation.Value += targetDirection * moveSpeed.Value * deltaTime;
-
-            if (math.distance(translation.Value, destination.Value) < 2f)
+            if (!translationData.Exists(target.Entity))
             {
-                moveSpeed.Value = 0;
+                return;
             }
-            
+
+            Translation targetTranslation = translationData[target.Entity];
+
+            if (math.distance(translation.Value, targetTranslation.Value) > 1f)
+            {
+                velocity.Direction = math.normalize(targetTranslation.Value - translation.Value);
+            }
+            else
+            {
+                velocity.Direction = Unity.Mathematics.float3.zero;
+            }
         }
     }
-    
+
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = new ActorMoveToSystemJob()
+        var job = new ActorMoveToSystemJob
         {
-            deltaTime = UnityEngine.Time.deltaTime
+            deltaTime = UnityEngine.Time.deltaTime,
+            translationData = GetComponentDataFromEntity<Translation>(true) 
         };
 
         return job.Schedule(this, inputDeps);
     }
 }
- 

@@ -14,9 +14,9 @@ public class TargetSystem : JobComponentSystem
         public float3 position;
     }
 
-    [RequireComponentTag(typeof(ActorTag))]
-    [ExcludeComponent(typeof(Destination), typeof(Target))]
     [BurstCompile]
+    [RequireComponentTag(typeof(ActorTag))]
+    [ExcludeComponent(typeof(Target))]
     struct TargetSystemJob : IJobForEachWithEntity<Translation>
     {
         [DeallocateOnJobCompletion] [ReadOnly] public NativeArray<TargetWithPosition> targetWithPositionArray;
@@ -52,7 +52,6 @@ public class TargetSystem : JobComponentSystem
 
             if (target != Entity.Null)
             {
-                entityCommandBuffer.AddComponent(index, entity, new Destination { Value = targetPosition });
                 entityCommandBuffer.AddComponent(index, entity, new Target { Entity = target });
             }
         }

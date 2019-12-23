@@ -10,37 +10,21 @@ public class MovementSystem : JobComponentSystem
 {
 
     [BurstCompile]
-    struct MovementSystemJob : IJobForEach<PlayerTag, Translation, MoveSpeed>
+    struct MovementSystemJob : IJobForEach<Translation, Velocity>
     {
-
         public float deltaTime;
-        public bool up;
-        public bool down;
-        public bool left;
-        public bool right;
-
-        public void Execute([ReadOnly] ref PlayerTag playerTag, ref Translation translation, [ReadOnly] ref MoveSpeed moveSpeed)
+        public void Execute(ref Translation translation, [ReadOnly] ref Velocity velocity)
         {
-            if (up)
-                translation.Value.y += moveSpeed.Value * deltaTime;
-            if (down)
-                translation.Value.y -= moveSpeed.Value * deltaTime;
-            if (left)
-                translation.Value.x -= moveSpeed.Value * deltaTime;
-            if (right)
-                translation.Value.x += moveSpeed.Value * deltaTime;
+            translation.Value += velocity.Direction * velocity.Speed * deltaTime;
         }
     }
     
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = new MovementSystemJob();
-
-        job.deltaTime = UnityEngine.Time.deltaTime;
-        job.up = UnityEngine.Input.GetKey(UnityEngine.KeyCode.W);
-        job.down = UnityEngine.Input.GetKey(UnityEngine.KeyCode.S);
-        job.left = UnityEngine.Input.GetKey(UnityEngine.KeyCode.A);
-        job.right = UnityEngine.Input.GetKey(UnityEngine.KeyCode.D);
+        var job = new MovementSystemJob()
+        {
+            deltaTime = UnityEngine.Time.deltaTime
+        };
 
         return job.Schedule(this, inputDeps);
     }
