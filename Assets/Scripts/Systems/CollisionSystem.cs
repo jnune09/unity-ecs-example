@@ -19,8 +19,7 @@ public class CollisionSystem : JobComponentSystem
             {
                 if (SimplePhysics.Intersect(colliders[index], colliders[j]))
                 {
-                    //moveSpeed.Value = 0;
-                    //UnityEngine.Debug.Log("collision");
+                    //UnityEngine.Debug.Log("collision detected!");
                 }
             }
         }

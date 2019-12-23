@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
         SpawnPlayer();
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 1000; i++)
         {
             //SpawnPlayer();
             SpawnActor();
@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     {
         Entity player = entityManager.CreateEntity(
             typeof(PlayerTag),
+            typeof(PlayerInput),
             typeof(AABB),
             typeof(Hunger),
             typeof(LocalToWorld),

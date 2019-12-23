@@ -4,10 +4,10 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
-public class PlayerInput : IComponentData
+public struct PlayerInput : IComponentData
 {
-    public bool moveUp;
-    public bool moveDown;
-    public bool moveLeft;
-    public bool moveRight;
+    public bool MoveUp;
+    public bool MoveDown;
+    public bool MoveLeft;
+    public bool MoveRight;
 }

@@ -15,7 +15,7 @@ public class MovementSystem : JobComponentSystem
         public float deltaTime;
         public void Execute(ref Translation translation, [ReadOnly] ref Velocity velocity)
         {
-            translation.Value += velocity.Direction * velocity.Speed * deltaTime;
+            translation.Value += math.normalizesafe(velocity.Direction) * velocity.Speed * deltaTime;
         }
     }
     
