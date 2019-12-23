@@ -22,8 +22,9 @@ public class GameManager : MonoBehaviour
 
         SpawnPlayer();
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 5; i++)
         {
+            //SpawnPlayer();
             SpawnActor();
         }
 
@@ -43,27 +44,26 @@ public class GameManager : MonoBehaviour
 
         entityManager.SetComponentData(player, new Hunger { Value = 10 });
         entityManager.SetComponentData(player, new MoveSpeed { Value = 4f });
-        entityManager.SetComponentData(player, new Translation { Value = new float3(0, 4, 0) });
+        entityManager.SetComponentData(player, new Translation { Value = new float3(UnityEngine.Random.Range(-8, 8), 4, 0) });
         entityManager.SetSharedComponentData(player, new RenderMesh { mesh = quadMesh, material = playerMaterial });
     }
 
     public void SpawnActor()
     {
         Entity actor = entityManager.CreateEntity(
+            typeof(ActorTag),
             typeof(AABB),
             typeof(Hunger),
             typeof(LocalToWorld),
             typeof(MoveSpeed),
             typeof(RenderMesh),
             typeof(State),
-            typeof(Target),
             typeof(Translation)
             );
 
         entityManager.SetComponentData(actor, new Hunger { Value = 10 });
         entityManager.SetComponentData(actor, new MoveSpeed { Value = 4f });
         entityManager.SetComponentData(actor, new Translation { Value = new float3(UnityEngine.Random.Range(-8, 8), 0, 0) });
-
         entityManager.SetSharedComponentData(actor, new RenderMesh { mesh = quadMesh, material = actorMaterial });
     }
 
