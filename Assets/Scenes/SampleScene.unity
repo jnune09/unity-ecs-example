@@ -236,6 +236,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   actorMaterial: {fileID: 2100000, guid: 3d298386e5807c045ae835cf7a2e512d, type: 2}
   playerMaterial: {fileID: 2100000, guid: 2d8ab923946668b40bc0b870a3669b5a, type: 2}
+  vendorMaterial: {fileID: 2100000, guid: 989aa5fa5749d8d4dbc47924e70d16af, type: 2}
 --- !u!4 &913954320
 Transform:
   m_ObjectHideFlags: 0

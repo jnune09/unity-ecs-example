@@ -8,7 +8,7 @@ using Unity.Transforms;
 public class ActorMoveToSystem : JobComponentSystem
 {
 
-    //[BurstCompile]
+    [BurstCompile]
     struct ActorMoveToSystemJob : IJobForEach<Target, Translation, Velocity>
     {
         public float deltaTime;
@@ -23,7 +23,7 @@ public class ActorMoveToSystem : JobComponentSystem
 
             Translation targetTranslation = translationData[target.Entity];
 
-            if (math.distance(translation.Value, targetTranslation.Value) > 1f)
+            if (math.distance(translation.Value, targetTranslation.Value) > 1.25f)
             {
                 velocity.Direction = targetTranslation.Value - translation.Value;
             }

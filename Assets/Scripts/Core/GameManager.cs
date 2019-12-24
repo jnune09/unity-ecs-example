@@ -15,18 +15,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Mesh quadMesh;
     [SerializeField] private Material actorMaterial;
     [SerializeField] private Material playerMaterial;
+    [SerializeField] private Material vendorMaterial;
 
     void Start()
     {
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 10; i++)
         {
             //SpawnPlayer();
             SpawnActor();
         }
 
         SpawnPlayer();
+        SpawnVendor();
 
     }
 
@@ -64,8 +66,21 @@ public class GameManager : MonoBehaviour
 
         entityManager.SetComponentData(actor, new Hunger { Value = 10 });
         entityManager.SetComponentData(actor, new Velocity { Speed = 4f });
-        entityManager.SetComponentData(actor, new Translation { Value = new float3(UnityEngine.Random.Range(-10, 10), 0, 0) });
+        entityManager.SetComponentData(actor, new Translation { Value = new float3(UnityEngine.Random.Range(-10, 10), UnityEngine.Random.Range(-10, 10), 0) });
         entityManager.SetSharedComponentData(actor, new RenderMesh { mesh = quadMesh, material = actorMaterial });
+    }
+
+    public void SpawnVendor()
+    {
+        Entity vendor = entityManager.CreateEntity(
+            typeof(AABB),
+            typeof(LocalToWorld),
+            typeof(RenderMesh),
+            typeof(Translation)
+            );
+
+        entityManager.SetComponentData(vendor, new Translation { Value = new float3(-15, 5, 0) });
+        entityManager.SetSharedComponentData(vendor, new RenderMesh { mesh = quadMesh, material = vendorMaterial });
     }
 
     void Update()
