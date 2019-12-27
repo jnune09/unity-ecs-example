@@ -18,8 +18,38 @@ public class VelocitySystem : JobComponentSystem
             ref Velocity velocity
             )
         {
-            //velocity.Value = math.normalizesafe(math.normalizesafe(direction.Value) + collision.Value) * speed.Value;
-            velocity.Value = math.normalizesafe(direction.Value) * speed.Value;
+            float3 reverse = new float3(0, 0, 0);
+
+            if (collision.Top)
+            {
+                reverse.y = -1f;
+            }
+            if (collision.Bottom)
+            {
+                reverse.y = 1f;
+            }
+            if (collision.Left)
+            {
+                reverse.x = 1f;
+            }
+            if (collision.Right)
+            {
+                reverse.x = -1f;
+            }
+
+            //float3 scale = new float3(1,1,0);
+            //if (collision.Top && collision.Bottom)
+            //{
+            //    scale.y = 0;
+            //}
+            //if (collision.Left && collision.Right)
+            //{
+            //    scale.x = 0;
+            //}
+
+            //velocity.Value = math.normalizesafe(math.normalizesafe(direction.Value) + reverse) * scale * speed.Value;
+
+            velocity.Value = math.normalizesafe(math.normalizesafe(direction.Value) + reverse) * speed.Value;
         }
     }
     

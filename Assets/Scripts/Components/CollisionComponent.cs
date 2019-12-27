@@ -6,5 +6,8 @@ using Unity.Mathematics;
 [Serializable]
 public struct Collision : IComponentData
 {
-    public float3 Value;
+    public bool Top;
+    public bool Bottom;
+    public bool Left;
+    public bool Right;
 }

@@ -30,14 +30,9 @@ public class GameManager : MonoBehaviour
 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-        for (int i = 0; i < 11; i++)
-        {
-            //SpawnActor();
-        }
-
         SpawnPlayer();
         SpawnVendor();
-        SpawnVendor2();
+        SpawnVendor();
         //SpawnActor();
 
     }
@@ -102,19 +97,7 @@ public class GameManager : MonoBehaviour
             typeof(Translation)
             );
 
-        entityManager.SetComponentData(vendor, new Translation { Value = new float3(50, 50, 0) });
-        entityManager.SetSharedComponentData(vendor, new RenderMesh { mesh = quadMesh, material = vendorMaterial });
-    }
-    public void SpawnVendor2()
-    {
-        Entity vendor = entityManager.CreateEntity(
-            typeof(AABB),
-            typeof(LocalToWorld),
-            typeof(RenderMesh),
-            typeof(Translation)
-            );
-
-        entityManager.SetComponentData(vendor, new Translation { Value = new float3(1, 1, 0) });
+        entityManager.SetComponentData(vendor, new Translation { Value = new float3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100), 0) });
         entityManager.SetSharedComponentData(vendor, new RenderMesh { mesh = quadMesh, material = vendorMaterial });
     }
 
