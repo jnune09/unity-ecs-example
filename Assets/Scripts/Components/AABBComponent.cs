@@ -6,6 +6,7 @@ using Unity.Mathematics;
 [Serializable]
 public struct AABB : IComponentData
 {
-    public float3 Min;
-    public float3 Max;
+    public float3 Position;
+    public float3 Size;
+    public float3x2 Value;
 }

@@ -13,7 +13,9 @@ public class HungerSystem : JobComponentSystem
     {
         public float deltaTime;
 
-        public void Execute(Entity entity, int index, ref Hunger hunger)
+        public void Execute(Entity entity, int index,
+            ref Hunger hunger
+            )
         {
             hunger.Value += 1f * deltaTime;
         }

@@ -5,16 +5,20 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-public class ActorMoveToSystem : JobComponentSystem
+public class MoveToSystem : JobComponentSystem
 {
 
     [BurstCompile]
-    struct ActorMoveToSystemJob : IJobForEach<Target, Translation, Direction>
+    struct MoveToSystemJob : IJobForEach<Target, Translation, Direction>
     {
         public float deltaTime;
         [ReadOnly] public ComponentDataFromEntity<Translation> translationData;
         
-        public void Execute([ReadOnly] ref Target target, [ReadOnly] ref Translation translation, ref Direction direction)
+        public void Execute(
+            [ReadOnly] ref Target target, 
+            [ReadOnly] ref Translation translation, 
+            ref Direction direction
+            )
         {
             if (!translationData.Exists(target.Entity))
             {
@@ -36,7 +40,7 @@ public class ActorMoveToSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = new ActorMoveToSystemJob
+        var job = new MoveToSystemJob
         {
             deltaTime = UnityEngine.Time.deltaTime,
             translationData = GetComponentDataFromEntity<Translation>(true) 

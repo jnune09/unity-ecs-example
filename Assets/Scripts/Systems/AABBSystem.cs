@@ -8,14 +8,15 @@ using Unity.Transforms;
 public class AABBSystem : JobComponentSystem
 {
     [BurstCompile]
-    struct AABBSystemJob : IJobForEach<AABB, Translation>
+    struct AABBSystemJob : IJobForEach<Translation, AABB>
     {
-        public void Execute(ref AABB aabb, [ReadOnly] ref Translation translation)
+        public void Execute(
+            [ReadOnly] ref Translation translation,
+            ref AABB aabb
+            )
         {
-            float3 min = new float3(-8f, -16f, 0);
-            float3 max = new float3(8f, 16f, 0);
-            aabb.Min = translation.Value + min;
-            aabb.Max = translation.Value + max;
+            aabb.Value.c0 = translation.Value + aabb.Position;
+            aabb.Value.c1 = aabb.Value.c0 + aabb.Size;
         }
     }
     

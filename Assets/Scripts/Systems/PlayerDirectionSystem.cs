@@ -5,13 +5,16 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-public class PlayerControlSystem : JobComponentSystem
+public class PlayerDirectionSystem : JobComponentSystem
 {
     [BurstCompile]
-    struct PlayerControlSystemJob : IJobForEach<PlayerInput, Direction>
+    struct PlayerDirectionSystemJob : IJobForEach<PlayerInput, Direction>
     {
 
-        public void Execute([ReadOnly] ref PlayerInput playerInput, ref Direction direction)
+        public void Execute(
+            [ReadOnly] ref PlayerInput playerInput,
+            ref Direction direction
+            )
         {
             direction.Value = float3.zero;
 
@@ -36,7 +39,7 @@ public class PlayerControlSystem : JobComponentSystem
     
     protected override JobHandle OnUpdate(JobHandle inputDependencies)
     {
-        var job = new PlayerControlSystemJob();
+        var job = new PlayerDirectionSystemJob();
         
         return job.Schedule(this, inputDependencies);
     }

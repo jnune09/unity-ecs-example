@@ -18,11 +18,14 @@ public class TargetSystem : JobComponentSystem
     [ExcludeComponent(typeof(Target))]
     struct TargetSystemJob : IJobForEachWithEntity<Translation>
     {
+        // this seems to be causing a memory leak, not sure why, need to figure out the right way to dispose of this array, maybe look up what a memory leak is also
         [DeallocateOnJobCompletion] [ReadOnly] public NativeArray<TargetWithPosition> targetWithPositionArray;
 
         public EntityCommandBuffer.Concurrent entityCommandBuffer;
 
-        public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation)
+        public void Execute(Entity entity, int index,
+            [ReadOnly] ref Translation translation
+            )
         {
             float3 position = translation.Value;
             Entity target = Entity.Null;

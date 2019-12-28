@@ -21,22 +21,22 @@ public class CollisionSystem : JobComponentSystem
 
             for (int j = index + 1; j < colliders.Length; j++)
             {
-                if (SimplePhysics.Intersect(colliders[index], colliders[j]))
+                if (SimplePhysics.Intersection(colliders[index].Value, colliders[j].Value))
                 {
-                    bool4 collisionDirection = SimplePhysics.Collision(colliders[index], colliders[j]);
-                    if (collisionDirection.x)
+                    bool4 collisionDetection = SimplePhysics.Collision(colliders[index].Value, colliders[j].Value);
+                    if (collisionDetection.x)
                     {
                         value.y = -1f;
                     }
-                    if (collisionDirection.y)
+                    if (collisionDetection.y)
                     {
                         value.y = 1f;
                     }
-                    if (collisionDirection.z)
+                    if (collisionDetection.z)
                     {
                         value.x = 1f;
                     }
-                    if (collisionDirection.w)
+                    if (collisionDetection.w)
                     {
                         value.x = -1f;
                     }

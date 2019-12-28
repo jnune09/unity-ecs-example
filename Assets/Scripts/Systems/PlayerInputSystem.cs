@@ -13,6 +13,7 @@ public class PlayerInputSystem : JobComponentSystem
         public bool moveDown;
         public bool moveLeft;
         public bool moveRight;
+
         public void Execute(ref PlayerInput playerInput)
         {
             playerInput.MoveUp = moveUp;
