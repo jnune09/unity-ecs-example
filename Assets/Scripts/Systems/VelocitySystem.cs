@@ -8,7 +8,6 @@ using static Unity.Mathematics.math;
 
 public class VelocitySystem : JobComponentSystem
 {
-    [BurstCompile]
     struct VelocitySystemJob : IJobForEach<Collision, Direction, Speed, Velocity>
     {
         public void Execute(

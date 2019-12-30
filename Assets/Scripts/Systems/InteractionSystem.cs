@@ -20,7 +20,6 @@ public class InteractionSystem : JobComponentSystem
         public float3x2 hitBox;
     }
 
-    [BurstCompile]
     [ExcludeComponent(typeof(Interaction))]
     struct InteractionSystemJob : IJobForEachWithEntity<InteractBox>
     {

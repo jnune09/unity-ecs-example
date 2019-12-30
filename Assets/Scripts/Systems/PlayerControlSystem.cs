@@ -7,7 +7,6 @@ using Unity.Transforms;
 
 public class PlayerControlSystem : JobComponentSystem
 {
-    [BurstCompile]
     struct PlayerControlSystemJob : IJobForEach<PlayerInput, Direction, InteractBox>
     {
 

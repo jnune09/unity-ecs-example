@@ -7,7 +7,6 @@ using Unity.Transforms;
 
 public class CollisionSystem : JobComponentSystem
 {
-    [BurstCompile]
     struct CollisionSystemJob : IJobForEachWithEntity<AABB, Collision>
     {
         [ReadOnly] public NativeArray<AABB> colliders;

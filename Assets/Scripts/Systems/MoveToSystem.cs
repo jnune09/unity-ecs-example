@@ -7,8 +7,6 @@ using Unity.Transforms;
 
 public class MoveToSystem : JobComponentSystem
 {
-
-    [BurstCompile]
     struct MoveToSystemJob : IJobForEach<Target, Translation, Direction>
     {
         public float deltaTime;

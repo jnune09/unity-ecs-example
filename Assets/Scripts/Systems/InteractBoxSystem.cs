@@ -8,7 +8,6 @@ using Unity.Transforms;
 
 public class InteractBoxSystem : JobComponentSystem
 {
-    [BurstCompile]
     struct InteractBoxSystemJob : IJobForEach<Direction, Translation, InteractBox>
     {
 

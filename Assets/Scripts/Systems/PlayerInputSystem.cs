@@ -6,7 +6,6 @@ using Unity.Mathematics;
 using Unity.Transforms;
 public class PlayerInputSystem : JobComponentSystem
 {
-    [BurstCompile]
     struct PlayerInputSystemJob : IJobForEach<PlayerInput>
     {
         public bool moveUp;

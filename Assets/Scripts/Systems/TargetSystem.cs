@@ -13,7 +13,6 @@ public class TargetSystem : JobComponentSystem
         public float3 position;
     }
 
-    [BurstCompile]
     [RequireComponentTag(typeof(Interaction))]
     [ExcludeComponent(typeof(Target))]
     // split this into a target and follow system

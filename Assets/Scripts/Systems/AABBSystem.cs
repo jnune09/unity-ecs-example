@@ -7,24 +7,15 @@ using Unity.Transforms;
 
 public class AABBSystem : JobComponentSystem
 {
-    [BurstCompile]
-    struct AABBSystemJob : IJobForEach<Translation, AABB>
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        public void Execute(
-            [ReadOnly] ref Translation translation,
-            ref AABB aabb
-            )
+        var job = Entities.ForEach((ref AABB aabb, in Translation translation) =>
         {
             aabb.Value.c0 = translation.Value + aabb.Position;
             aabb.Value.c1 = aabb.Value.c0 + aabb.Size;
 
-        }
-    }
-    
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
-    {
-        var job = new AABBSystemJob();
-        
-        return job.Schedule(this, inputDeps);
+        }).Schedule(inputDeps);
+
+        return job;
     }
 }
