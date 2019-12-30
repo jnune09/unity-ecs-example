@@ -17,6 +17,7 @@ public class AABBSystem : JobComponentSystem
         {
             aabb.Value.c0 = translation.Value + aabb.Position;
             aabb.Value.c1 = aabb.Value.c0 + aabb.Size;
+
         }
     }
     
@@ -24,7 +25,6 @@ public class AABBSystem : JobComponentSystem
     {
         var job = new AABBSystemJob();
         
-
         return job.Schedule(this, inputDeps);
     }
 }

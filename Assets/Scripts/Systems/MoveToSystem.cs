@@ -33,7 +33,7 @@ public class MoveToSystem : JobComponentSystem
             }
             else
             {
-                direction.Value = Unity.Mathematics.float3.zero;
+                direction.Value = float3.zero;
             }
         }
     }

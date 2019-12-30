@@ -10,4 +10,5 @@ public struct PlayerInput : IComponentData
     public bool MoveDown;
     public bool MoveLeft;
     public bool MoveRight;
+    public bool Interact;
 }

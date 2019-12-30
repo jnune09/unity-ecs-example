@@ -4,10 +4,9 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
-public struct TargetBox : IComponentData
+public struct HitBox: IComponentData
 {
-    public float Offset;
-    public float Distance;
+    public float3 Position;
     public float3 Size;
     public float3x2 Value;
 }

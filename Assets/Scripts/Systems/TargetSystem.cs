@@ -14,26 +14,27 @@ public class TargetSystem : JobComponentSystem
     }
 
     [BurstCompile]
-    [RequireComponentTag(typeof(ActorTag))]
+    [RequireComponentTag(typeof(Interaction))]
     [ExcludeComponent(typeof(Target))]
+    // split this into a target and follow system
     struct TargetSystemJob : IJobForEachWithEntity<Translation>
     {
-        // this seems to be causing a memory leak, not sure why, need to figure out the right way to dispose of this array, maybe look up what a memory leak is also
-        [DeallocateOnJobCompletion] [ReadOnly] public NativeArray<TargetWithPosition> targetWithPositionArray;
+        // create the array they will be created with a query
+        [DeallocateOnJobCompletion] [ReadOnly] public NativeArray<TargetWithPosition> targetArray;
 
-        public EntityCommandBuffer.Concurrent entityCommandBuffer;
+        public EntityCommandBuffer.Concurrent buffer;
 
         public void Execute(Entity entity, int index,
             [ReadOnly] ref Translation translation
             )
         {
-            float3 position = translation.Value;
-            Entity target = Entity.Null;
-            float3 targetPosition = float3.zero;
+            var position = translation.Value;
+            var target = Entity.Null;
+            var targetPosition = float3.zero;
 
-            for (int i =0; i < targetWithPositionArray.Length; i++)
+            for (int i =0; i < targetArray.Length; i++)
             {
-                TargetWithPosition targetWithPosition = targetWithPositionArray[i];
+                TargetWithPosition targetWithPosition = targetArray[i];
 
                 if (target == Entity.Null)
                 {
@@ -55,33 +56,32 @@ public class TargetSystem : JobComponentSystem
 
             if (target != Entity.Null)
             {
-                entityCommandBuffer.AddComponent(index, entity, new Target { Entity = target });
+                buffer.AddComponent(index, entity, new Target { Entity = target });
             }
+
         }
     }
 
-    EntityQuery m_targetQuery;
+    private EndSimulationEntityCommandBufferSystem endSimulationBuffer;
+    private EntityQuery m_targetQuery;
 
-    private EndSimulationEntityCommandBufferSystem endSimulationEntityCommandBuffer;
     protected override void OnCreate()
     {
-        endSimulationEntityCommandBuffer = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        endSimulationBuffer = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        m_targetQuery = GetEntityQuery(typeof(PlayerTag), ComponentType.ReadOnly<Translation>());
         base.OnCreate();
     }
 
     protected override JobHandle OnUpdate(JobHandle inputDeps) 
     {
-        // note: move to OnCreate()
-        m_targetQuery = GetEntityQuery(typeof(PlayerTag), ComponentType.ReadOnly<Translation>());
+        var targetEntityArray = m_targetQuery.ToEntityArray(Allocator.TempJob);
+        var targetPositionArray = m_targetQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
 
-        NativeArray<Entity> targetEntityArray = m_targetQuery.ToEntityArray(Allocator.TempJob);
-        NativeArray<Translation> targetPositionArray = m_targetQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
-
-        NativeArray<TargetWithPosition> targetWithPositionArray = new NativeArray<TargetWithPosition>(targetEntityArray.Length, Allocator.TempJob);
+        var targetArray = new NativeArray<TargetWithPosition>(targetEntityArray.Length, Allocator.TempJob);
 
         for (int i = 0; i < targetEntityArray.Length; i++)
         {
-            targetWithPositionArray[i] = new TargetWithPosition
+            targetArray[i] = new TargetWithPosition
             {
                 target = targetEntityArray[i],
                 position = targetPositionArray[i].Value
@@ -93,13 +93,13 @@ public class TargetSystem : JobComponentSystem
 
         var job = new TargetSystemJob
         {
-            targetWithPositionArray = targetWithPositionArray,
-            entityCommandBuffer = endSimulationEntityCommandBuffer.CreateCommandBuffer().ToConcurrent()
+            targetArray = targetArray,
+            buffer = endSimulationBuffer.CreateCommandBuffer().ToConcurrent()
         };
 
         var jobHandle = job.Schedule(this, inputDeps);
 
-        endSimulationEntityCommandBuffer.AddJobHandleForProducer(jobHandle);
+        endSimulationBuffer.AddJobHandleForProducer(jobHandle);
 
         return jobHandle;
 

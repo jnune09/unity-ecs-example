@@ -13,17 +13,21 @@ public class PlayerInputSystem : JobComponentSystem
         public bool moveDown;
         public bool moveLeft;
         public bool moveRight;
+        public bool interact;
 
         public void Execute(ref PlayerInput playerInput)
         {
+            // movement
             playerInput.MoveUp = moveUp;
             playerInput.MoveDown = moveDown;
             playerInput.MoveLeft = moveLeft;
             playerInput.MoveRight = moveRight;
+            // action
+            playerInput.Interact = interact;
         }
     }
     
-    protected override JobHandle OnUpdate(JobHandle inputDependencies)
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var job = new PlayerInputSystemJob()
         {
@@ -31,8 +35,9 @@ public class PlayerInputSystem : JobComponentSystem
             moveDown = UnityEngine.Input.GetKey(UnityEngine.KeyCode.S),
             moveLeft = UnityEngine.Input.GetKey(UnityEngine.KeyCode.A),
             moveRight = UnityEngine.Input.GetKey(UnityEngine.KeyCode.D),
+            interact = UnityEngine.Input.GetKey(UnityEngine.KeyCode.E),
         };
 
-        return job.Schedule(this, inputDependencies);
+        return job.Schedule(this, inputDeps);
     }
 }

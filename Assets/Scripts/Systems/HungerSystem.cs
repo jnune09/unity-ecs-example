@@ -9,11 +9,11 @@ public class HungerSystem : JobComponentSystem
 {
 
     [BurstCompile]
-    struct HungerSystemJob : IJobForEachWithEntity<Hunger>
+    struct HungerSystemJob : IJobForEach<Hunger>
     {
         public float deltaTime;
 
-        public void Execute(Entity entity, int index,
+        public void Execute(
             ref Hunger hunger
             )
         {

@@ -17,33 +17,33 @@ public class CollisionSystem : JobComponentSystem
             ref Collision collision
             )
         {
-            float3 value = new float3();
+            // reset collision value
+            collision.Value = float3.zero;
 
             for (int j = index + 1; j < colliders.Length; j++)
             {
                 if (SimplePhysics.Intersection(colliders[index].Value, colliders[j].Value))
                 {
-                    bool4 collisionDetection = SimplePhysics.Collision(colliders[index].Value, colliders[j].Value);
-                    if (collisionDetection.x)
+                    bool4 detection = SimplePhysics.Collision(colliders[index].Value, colliders[j].Value);
+                    if (detection.x)
                     {
-                        value.y = -1f;
+                        collision.Value.y = -1f;
                     }
-                    if (collisionDetection.y)
+                    if (detection.y)
                     {
-                        value.y = 1f;
+                        collision.Value.y = 1f;
                     }
-                    if (collisionDetection.z)
+                    if (detection.z)
                     {
-                        value.x = 1f;
+                        collision.Value.x = 1f;
                     }
-                    if (collisionDetection.w)
+                    if (detection.w)
                     {
-                        value.x = -1f;
+                        collision.Value.x = -1f;
                     }
                 }
             }
 
-            collision.Value = value;
         }
     }
 
@@ -62,7 +62,7 @@ public class CollisionSystem : JobComponentSystem
         {
             colliders = colliders
         };
-        
+
         var jobHandle = job.Schedule(this, inputDeps);
 
         jobHandle.Complete();

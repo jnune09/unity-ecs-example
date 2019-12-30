@@ -43,8 +43,9 @@ public class GameManager : MonoBehaviour
             typeof(AABB),
             typeof(Collision),
             typeof(Direction),
-            typeof(TargetBox),
+            typeof(HitBox),
             typeof(Hunger),
+            typeof(InteractBox),
             typeof(Inventory),
             typeof(LocalToWorld),
             typeof(PlayerInput),
@@ -58,8 +59,9 @@ public class GameManager : MonoBehaviour
         //entityManager.GetBuffer<Inventory>(player).Add(new Inventory { Item = item, Count = 1 });
 
         entityManager.SetComponentData(player, new AABB { Position = new float3(-8, -16, 0), Size = new float3(16, 8, 0) });
-        entityManager.SetComponentData(player, new TargetBox { Offset = -4f, Distance = 16f, Size = new float3(8, 8, 0) });
+        entityManager.SetComponentData(player, new HitBox { Position = new float3(-8, -16, 0), Size = new float3(16, 32, 0) });
         entityManager.SetComponentData(player, new Hunger { Value = 10 });
+        entityManager.SetComponentData(player, new InteractBox { Offset = -4f, Distance = 16f, Size = new float3(8, 8, 0) });
         entityManager.SetComponentData(player, new Speed { Value = 80f });
         entityManager.SetComponentData(player, new Translation { Value = new float3(UnityEngine.Random.Range(100, 100), 5, 0) });
         entityManager.SetSharedComponentData(player, new RenderMesh { mesh = quadMesh, material = playerMaterial });
@@ -69,9 +71,11 @@ public class GameManager : MonoBehaviour
     {
         Entity actor = entityManager.CreateEntity(
             typeof(ActorTag),
+            typeof(AgentTag),
             typeof(AABB),
             typeof(Collision),
             typeof(Direction),
+            typeof(HitBox),
             typeof(Hunger),
             typeof(Inventory),
             typeof(LocalToWorld),
@@ -82,6 +86,7 @@ public class GameManager : MonoBehaviour
             );
 
         entityManager.SetComponentData(actor, new AABB { Position = new float3(-8, -16, 0), Size = new float3(16, 8, 0) });
+        entityManager.SetComponentData(actor, new HitBox { Position = new float3(-8, -16, 0), Size = new float3(16, 32, 0) });
         entityManager.SetComponentData(actor, new Hunger { Value = 10 });
         entityManager.SetComponentData(actor, new Speed { Value = 60f });
         entityManager.SetComponentData(actor, new Translation { Value = new float3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100), 0) });

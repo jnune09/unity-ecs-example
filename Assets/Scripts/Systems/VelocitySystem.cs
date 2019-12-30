@@ -23,10 +23,10 @@ public class VelocitySystem : JobComponentSystem
         }
     }
     
-    protected override JobHandle OnUpdate(JobHandle inputDependencies)
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var job = new VelocitySystemJob();
         
-        return job.Schedule(this, inputDependencies);
+        return job.Schedule(this, inputDeps);
     }
 }
