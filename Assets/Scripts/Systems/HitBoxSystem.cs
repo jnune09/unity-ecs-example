@@ -5,22 +5,15 @@ using Unity.Transforms;
 
 public class HitBoxSystem : JobComponentSystem
 {
-    struct HitBoxSystemJob : IJobForEach<Translation, HitBox>
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        public void Execute(
-            [ReadOnly] ref Translation translation,
-            ref HitBox hitBox
-            )
+        var job = Entities.ForEach((ref HitBox hitBox, in Translation translation) =>
         {
             hitBox.Value.c0 = translation.Value + hitBox.Position;
             hitBox.Value.c1 = hitBox.Value.c0 + hitBox.Size;
-        }
-    }
-    
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
-    {
-        var job = new HitBoxSystemJob();
-        
-        return job.Schedule(this, inputDeps);
+
+        }).Schedule(inputDeps);
+
+        return job;
     }
 }

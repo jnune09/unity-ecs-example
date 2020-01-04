@@ -1,4 +1,5 @@
-﻿using Unity.Burst;
+﻿
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -25,7 +26,7 @@ public class PlayerInputSystem : JobComponentSystem
             playerInput.Interact = interact;
         }
     }
-    
+
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var job = new PlayerInputSystemJob()

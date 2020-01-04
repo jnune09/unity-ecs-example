@@ -7,20 +7,10 @@ using Unity.Transforms;
 
 public class PlayerControlSystem : JobComponentSystem
 {
-    struct PlayerControlSystemJob : IJobForEach<PlayerInput, Direction, InteractBox>
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-
-        public void Execute(
-            [ReadOnly] ref PlayerInput playerInput,
-            ref Direction direction,
-            ref InteractBox interactiveBox
-            )
+        var job = Entities.ForEach((ref Direction direction, ref InteractBox interactiveBox, in PlayerInput playerInput) =>
         {
-
-            //----------------------------------------------------------------------------------------------------//
-            //----------------------------------------------------------------------------------------------------//
-            //----------------------------------------------------------------------------------------------------//
-
             direction.Value = float3.zero;
 
             if (playerInput.MoveUp)
@@ -40,10 +30,6 @@ public class PlayerControlSystem : JobComponentSystem
                 direction.Value.x += 1f;
             }
 
-            //----------------------------------------------------------------------------------------------------//
-            //----------------------------------------------------------------------------------------------------//
-            //----------------------------------------------------------------------------------------------------//
-
             if (playerInput.Interact)
             {
                 interactiveBox.Active = true;
@@ -52,17 +38,8 @@ public class PlayerControlSystem : JobComponentSystem
             {
                 interactiveBox.Active = false;
             }
+        }).Schedule(inputDeps);
 
-            //----------------------------------------------------------------------------------------------------//
-            //----------------------------------------------------------------------------------------------------//
-            //----------------------------------------------------------------------------------------------------//
-        }
-    }
-    
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
-    {
-        var job = new PlayerControlSystemJob();
-        
-        return job.Schedule(this, inputDeps);
+        return job;
     }
 }
