@@ -13,7 +13,7 @@ public class PlayerInputSystem : JobComponentSystem
         public bool moveDown;
         public bool moveLeft;
         public bool moveRight;
-        public bool interact;
+        public bool attack;
 
         public void Execute(ref PlayerInput playerInput)
         {
@@ -23,7 +23,7 @@ public class PlayerInputSystem : JobComponentSystem
             playerInput.MoveLeft = moveLeft;
             playerInput.MoveRight = moveRight;
             // action
-            playerInput.Interact = interact;
+            playerInput.Attack = attack;
         }
     }
 
@@ -35,7 +35,7 @@ public class PlayerInputSystem : JobComponentSystem
             moveDown = UnityEngine.Input.GetKey(UnityEngine.KeyCode.S),
             moveLeft = UnityEngine.Input.GetKey(UnityEngine.KeyCode.A),
             moveRight = UnityEngine.Input.GetKey(UnityEngine.KeyCode.D),
-            interact = UnityEngine.Input.GetKey(UnityEngine.KeyCode.E),
+            attack = UnityEngine.Input.GetKey(UnityEngine.KeyCode.E),
         };
 
         return job.Schedule(this, inputDeps);

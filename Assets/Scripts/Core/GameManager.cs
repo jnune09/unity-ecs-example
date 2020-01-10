@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
         entityManager.SetComponentData(player, new Translation { Value = new float3(UnityEngine.Random.Range(100, 100), 5, 0) });
         entityManager.SetSharedComponentData(player, new RenderMesh { mesh = quadMesh, material = playerMaterial });
     }
-
+    
     public void SpawnActor()
     {
         Entity actor = entityManager.CreateEntity(
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         entityManager.SetComponentData(actor, new AABB { Position = new float3(-8, -16, 0), Size = new float3(16, 8, 0) });
         entityManager.SetComponentData(actor, new HitBox { Position = new float3(-8, -16, 0), Size = new float3(16, 32, 0) });
         entityManager.SetComponentData(actor, new Hunger { Value = 10 });
-        entityManager.SetComponentData(actor, new Hunger { Value = 100 });
+        entityManager.SetComponentData(actor, new Health { Value = 100 });
         entityManager.SetComponentData(actor, new Speed { Value = 60f });
         entityManager.SetComponentData(actor, new Translation { Value = new float3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100), 0) });
         entityManager.SetSharedComponentData(actor, new RenderMesh { mesh = quadMesh, material = actorMaterial });

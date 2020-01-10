@@ -7,6 +7,7 @@ using Unity.Mathematics;
 public struct ActionBox : IComponentData
 {
     public Entity CoActor;
+    public int ActionID;
     public float Distance;
     public float Offset;
     public float3 Direction;

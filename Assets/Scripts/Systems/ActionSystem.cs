@@ -6,18 +6,21 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using static Unity.Mathematics.math;
 
-public class DamageSystem : JobComponentSystem
+public class ActionSystem : JobComponentSystem
 {
     [BurstCompile]
-    struct DamageSystemJob : IJobForEachWithEntity<Health, Damage>
+    struct ActionSystemJob : IJobForEachWithEntity<ActionBox>
     {
         public EntityCommandBuffer.Concurrent buffer;
-
-        public void Execute(Entity entity, int index, ref Health health, [ReadOnly] ref Damage damage)
+        public void Execute(Entity entity, int index, [ReadOnly] ref ActionBox actionBox)
         {
-            health.Value = health.Value - damage.Value;
-
-            buffer.RemoveComponent<Damage>(index, entity);
+            if (actionBox.CoActor != Entity.Null && actionBox.ActionID != 0)
+            {
+                if (actionBox.ActionID == 1)
+                {
+                    buffer.AddComponent(index, actionBox.CoActor, new Damage { Value = 5f });
+                }
+            }
         }
     }
 
@@ -33,7 +36,7 @@ public class DamageSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = new DamageSystemJob
+        var job = new ActionSystemJob
         {
             buffer = endSimulationBuffer.CreateCommandBuffer().ToConcurrent()
         };

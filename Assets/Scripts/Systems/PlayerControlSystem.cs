@@ -9,7 +9,7 @@ public class PlayerControlSystem : JobComponentSystem
 {
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = Entities.ForEach((ref Direction direction, ref InteractBox interactiveBox, in PlayerInput playerInput) =>
+        var job = Entities.ForEach((ref ActionBox actionBox, ref Direction direction, in PlayerInput playerInput) =>
         {
             direction.Value = float3.zero;
 
@@ -30,14 +30,15 @@ public class PlayerControlSystem : JobComponentSystem
                 direction.Value.x += 1f;
             }
 
-            if (playerInput.Interact)
+            if (playerInput.Attack)
             {
-                interactiveBox.Active = true;
+                actionBox.ActionID = 1;
             }
             else
             {
-                interactiveBox.Active = false;
+                actionBox.ActionID = 0;
             }
+
         }).Schedule(inputDeps);
 
         return job;

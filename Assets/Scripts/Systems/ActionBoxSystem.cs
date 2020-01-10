@@ -21,9 +21,7 @@ public class ActionBoxSystem : JobComponentSystem
         public float3x2 hitBox;
     }
 
-    [DeallocateOnJobCompletion]
-    [ReadOnly]
-    private EntityQuery m_actorQuery;
+    [ReadOnly] private EntityQuery m_actorQuery;
 
     protected override void OnCreate()
     {
