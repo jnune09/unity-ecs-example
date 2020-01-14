@@ -4,10 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
-public struct Collision : IComponentData
+public struct Camera : IComponentData
 {
-    public float3 Direction;
     public float3 Position;
-    public float3 Size;
-    public MinMaxAABB Bounds;
 }

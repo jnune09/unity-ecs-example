@@ -6,9 +6,9 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using static Unity.Mathematics.math;
 
+// @update!
 public class ActionSystem : JobComponentSystem
 {
-    [BurstCompile]
     struct ActionSystemJob : IJobForEachWithEntity<ActionBox>
     {
         public EntityCommandBuffer.Concurrent buffer;
@@ -19,6 +19,11 @@ public class ActionSystem : JobComponentSystem
                 if (actionBox.ActionID == 1)
                 {
                     buffer.AddComponent(index, actionBox.CoActor, new Damage { Value = 5f });
+                    buffer.AddComponent(index, actionBox.CoActor, new Target { Entity = entity });
+                }
+                if (actionBox.ActionID == 2)
+                {
+                    buffer.AddComponent(index, actionBox.CoActor, new PickUp { Value = entity });
                 }
             }
         }

@@ -5,40 +5,44 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+// @update!
 public class CollisionSystem : JobComponentSystem
 {
-    struct CollisionSystemJob : IJobForEachWithEntity<AABB, Collision>
+    struct CollisionSystemJob : IJobForEachWithEntity<Translation, Collision>
     {
-        [ReadOnly] public NativeArray<AABB> colliders;
+        [ReadOnly] public NativeArray<Collision> colliders;
 
-        public void Execute(Entity entity, int index, 
-            [ReadOnly] ref AABB aabb,
+        public void Execute(Entity entity, int index,
+            [ReadOnly] ref Translation translation,
             ref Collision collision
             )
         {
+            collision.Bounds.Min = translation.Value + collision.Position;
+            collision.Bounds.Max = collision.Bounds.Min + collision.Size;
+            
             // reset collision value
-            collision.Value = float3.zero;
+            collision.Direction = float3.zero;
 
             for (int j = 0; j < colliders.Length; j++)
             {
-                if (SimplePhysics.Intersection(colliders[index].Value, colliders[j].Value))
+                if ( /* index != j && */ SimplePhysics.Intersection(colliders[index].Bounds, colliders[j].Bounds))
                 {
-                    bool4 detection = SimplePhysics.Collision(colliders[index].Value, colliders[j].Value);
+                    bool4 detection = SimplePhysics.Collision(colliders[index].Bounds, colliders[j].Bounds);
                     if (detection.x)
                     {
-                        collision.Value.y = -1f;
+                        collision.Direction.y = -1f;
                     }
                     if (detection.y)
                     {
-                        collision.Value.y = 1f;
+                        collision.Direction.y = 1f;
                     }
                     if (detection.z)
                     {
-                        collision.Value.x = 1f;
+                        collision.Direction.x = 1f;
                     }
                     if (detection.w)
                     {
-                        collision.Value.x = -1f;
+                        collision.Direction.x = -1f;
                     }
                 }
             }
@@ -46,16 +50,16 @@ public class CollisionSystem : JobComponentSystem
         }
     }
 
-    EntityQuery m_aabbQuery;
+    [ReadOnly] private EntityQuery m_collisionQuery;
 
     protected override void OnCreate()
     {
-        m_aabbQuery = GetEntityQuery(typeof(AABB));
+        m_collisionQuery = GetEntityQuery(ComponentType.ReadOnly<Collision>());
     }
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var colliders = m_aabbQuery.ToComponentDataArray<AABB>(Allocator.TempJob);
+        var colliders = m_collisionQuery.ToComponentDataArray<Collision>(Allocator.TempJob);
 
         var job = new CollisionSystemJob
         {

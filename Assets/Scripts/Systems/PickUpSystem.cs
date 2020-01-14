@@ -7,22 +7,18 @@ using Unity.Transforms;
 using static Unity.Mathematics.math;
 
 // @update!
-public class DamageSystem : JobComponentSystem
+public class PickUpSystem : JobComponentSystem
 {
-    struct DamageSystemJob : IJobForEachWithEntity<Health, Damage>
+    struct PickUpSystemJob : IJobForEachWithEntity<Item, PickUp>
     {
+        [ReadOnly] public BufferFromEntity<Inventory> inventoryData;
         public EntityCommandBuffer.Concurrent buffer;
 
-        public void Execute(Entity entity, int index, ref Health health, [ReadOnly] ref Damage damage)
+        public void Execute(Entity entity, int index, [ReadOnly] ref Item item, ref PickUp pickUp)
         {
-            health.Value -= damage.Value;
-
-            buffer.RemoveComponent<Damage>(index, entity);
-
-            if (health.Value <= 0)
-            {
-                buffer.DestroyEntity(index, entity);
-            }
+            //inventoryData[pickUp.Value].Add(new Inventory { Item = entity, Count = 1 });
+            //buffer.AddComponent<Item>(index, pickUp.Value, item);
+            buffer.DestroyEntity(index, entity);
         }
     }
 
@@ -38,9 +34,10 @@ public class DamageSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = new DamageSystemJob
+        var job = new PickUpSystemJob
         {
-            buffer = endSimulationBuffer.CreateCommandBuffer().ToConcurrent()
+            buffer = endSimulationBuffer.CreateCommandBuffer().ToConcurrent(),
+            inventoryData = GetBufferFromEntity<Inventory>(true)
         };
 
         var jobHandle = job.Schedule(this, inputDeps);

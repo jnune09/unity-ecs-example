@@ -12,5 +12,5 @@ public struct ActionBox : IComponentData
     public float Offset;
     public float3 Direction;
     public float3 Size;
-    public float3x2 Value;
+    public MinMaxAABB Bounds;
 }

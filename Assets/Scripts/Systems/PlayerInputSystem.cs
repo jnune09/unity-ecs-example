@@ -1,10 +1,11 @@
-﻿
-using Unity.Burst;
+﻿using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
+
+// @update!
 public class PlayerInputSystem : JobComponentSystem
 {
     struct PlayerInputSystemJob : IJobForEach<PlayerInput>
@@ -35,7 +36,7 @@ public class PlayerInputSystem : JobComponentSystem
             moveDown = UnityEngine.Input.GetKey(UnityEngine.KeyCode.S),
             moveLeft = UnityEngine.Input.GetKey(UnityEngine.KeyCode.A),
             moveRight = UnityEngine.Input.GetKey(UnityEngine.KeyCode.D),
-            attack = UnityEngine.Input.GetKey(UnityEngine.KeyCode.E),
+            attack = UnityEngine.Input.GetMouseButtonDown(0),
         };
 
         return job.Schedule(this, inputDeps);

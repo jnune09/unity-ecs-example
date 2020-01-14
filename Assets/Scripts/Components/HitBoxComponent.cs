@@ -8,5 +8,5 @@ public struct HitBox: IComponentData
 {
     public float3 Position;
     public float3 Size;
-    public float3x2 Value;
+    public MinMaxAABB Bounds;
 }

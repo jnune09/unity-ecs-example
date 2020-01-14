@@ -9,8 +9,8 @@ public class HitBoxSystem : JobComponentSystem
     {
         var job = Entities.ForEach((ref HitBox hitBox, in Translation translation) =>
         {
-            hitBox.Value.c0 = translation.Value + hitBox.Position;
-            hitBox.Value.c1 = hitBox.Value.c0 + hitBox.Size;
+            hitBox.Bounds.Min = translation.Value + hitBox.Position;
+            hitBox.Bounds.Max = hitBox.Bounds.Min + hitBox.Size;
 
         }).Schedule(inputDeps);
 

@@ -4,4 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
-public struct Interaction : IComponentData { }
+public struct Item : IComponentData
+{
+
+}

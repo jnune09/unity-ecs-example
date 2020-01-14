@@ -6,11 +6,6 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using static Unity.Mathematics.math;
 
-// in this system we will store any entity that is colliding with the action box in the action box
-// if a action is choosen we will also store the action
-// in the action system (maybe or maybe not this one) if entity is not null and an action is choosen then an action comp
-// will be given to the stored entity which will then run through a system so resolve the action
-
 public class ActionBoxSystem : JobComponentSystem
 {
 
@@ -18,7 +13,7 @@ public class ActionBoxSystem : JobComponentSystem
     private struct Actor
     {
         public Entity actor;
-        public float3x2 hitBox;
+        public MinMaxAABB hitBox;
     }
 
     [ReadOnly] private EntityQuery m_actorQuery;
@@ -26,7 +21,7 @@ public class ActionBoxSystem : JobComponentSystem
     protected override void OnCreate()
     {
         // query for entities with actortag and hitbox, with read only permission on hitbox
-        m_actorQuery = GetEntityQuery(typeof(ActorTag), ComponentType.ReadOnly<HitBox>());
+        m_actorQuery = GetEntityQuery(ComponentType.ReadOnly<ActorTag>(), ComponentType.ReadOnly<HitBox>());
 
         base.OnCreate();
     }
@@ -44,7 +39,7 @@ public class ActionBoxSystem : JobComponentSystem
             actorArray[i] = new Actor
             {
                 actor = entityArray[i],
-                hitBox = hitBoxArray[i].Value
+                hitBox = hitBoxArray[i].Bounds
             };
         }
 
@@ -60,15 +55,15 @@ public class ActionBoxSystem : JobComponentSystem
                 actionBox.Direction = direction.Value;
             }
 
-            actionBox.Value.c0 = translation.Value + (actionBox.Direction * actionBox.Distance + actionBox.Offset);
-            actionBox.Value.c1 = actionBox.Value.c0 + actionBox.Size;
+            actionBox.Bounds.Min = translation.Value + (actionBox.Direction * actionBox.Distance + actionBox.Offset);
+            actionBox.Bounds.Max = actionBox.Bounds.Min + actionBox.Size;
 
             actionBox.CoActor = Entity.Null;
             //hasTarget = false;
 
             for (int i = 0; i < actorArray.Length; i++)
             {
-                if (SimplePhysics.Intersection(actionBox.Value, actorArray[i].hitBox))
+                if (SimplePhysics.Intersection(actionBox.Bounds, actorArray[i].hitBox))
                 {
                     actionBox.CoActor = actorArray[i].actor;
                     //hasTarget = true;

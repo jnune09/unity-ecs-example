@@ -12,35 +12,25 @@ using Unity.Transforms;
 public class GameManager : MonoBehaviour
 {
     EntityManager entityManager;
-    [SerializeField] private Mesh quadMesh;
-    [SerializeField] private Material actorMaterial;
-    [SerializeField] private Material playerMaterial;
-    [SerializeField] private Material vendorMaterial;
+    [SerializeField] private Material characterMaterial;
+    [SerializeField] private Material foodMaterial;
 
     void Start()
     {
-        Vector3[] characterSpriteVertices = new Vector3[4];
-
-        characterSpriteVertices[0] = new Vector3(-8, -16);
-        characterSpriteVertices[1] = new Vector3(8, -16);
-        characterSpriteVertices[2] = new Vector3(-8, 16);
-        characterSpriteVertices[3] = new Vector3(8, 16);
-
-        quadMesh.vertices = characterSpriteVertices;
-
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-        SpawnPlayer();
-        SpawnVendor();
         SpawnActor();
+        SpawnPlayer();
+        SpawnFood();
 
+        //print(Application.dataPath);
+        
     }
 
     public void SpawnPlayer()
     {
         Entity player = entityManager.CreateEntity(
             typeof(PlayerTag),
-            typeof(AABB),
             typeof(ActionBox),
             typeof(Collision),
             typeof(Direction),
@@ -55,16 +45,19 @@ public class GameManager : MonoBehaviour
             typeof(Velocity)
             );
 
-        //Entity item = entityManager.CreateEntity();
-        //entityManager.GetBuffer<Inventory>(player).Add(new Inventory { Item = item, Count = 1 });
+        Entity item = entityManager.CreateEntity();
+        entityManager.GetBuffer<Inventory>(player).Add(new Inventory { Item = item, Count = 7 });
 
-        entityManager.SetComponentData(player, new AABB { Position = new float3(-8, -16, 0), Size = new float3(16, 8, 0) });
+
+        entityManager.SetName(player, "Player");
+        entityManager.SetComponentData(player, new Collision { Position = new float3(-6, -16, 0), Size = new float3(12, 2, 0) });
         entityManager.SetComponentData(player, new ActionBox { Offset = -4f, Distance = 16f, Size = new float3(8, 8, 0) });
         entityManager.SetComponentData(player, new HitBox { Position = new float3(-8, -16, 0), Size = new float3(16, 32, 0) });
         entityManager.SetComponentData(player, new Hunger { Value = 10 });
         entityManager.SetComponentData(player, new Speed { Value = 80f });
-        entityManager.SetComponentData(player, new Translation { Value = new float3(UnityEngine.Random.Range(100, 100), 5, 0) });
-        entityManager.SetSharedComponentData(player, new RenderMesh { mesh = quadMesh, material = playerMaterial });
+        entityManager.SetComponentData(player, new Translation { Value = new float3(UnityEngine.Random.Range(-100, 100), 0, 0) });
+        entityManager.SetSharedComponentData(player, new RenderMesh { mesh = SimpleGraphics.CreateMesh(24, 48), material = characterMaterial });
+
     }
     
     public void SpawnActor()
@@ -72,7 +65,6 @@ public class GameManager : MonoBehaviour
         Entity actor = entityManager.CreateEntity(
             typeof(ActorTag),
             typeof(AgentTag),
-            typeof(AABB),
             typeof(ActionBox),
             typeof(Collision),
             typeof(Direction),
@@ -87,36 +79,35 @@ public class GameManager : MonoBehaviour
             typeof(Velocity)
             );
 
-        entityManager.SetComponentData(actor, new AABB { Position = new float3(-8, -16, 0), Size = new float3(16, 8, 0) });
+
+
+        entityManager.SetComponentData(actor, new Collision { Position = new float3(-6, -16, 0), Size = new float3(12, 2, 0) });
         entityManager.SetComponentData(actor, new HitBox { Position = new float3(-8, -16, 0), Size = new float3(16, 32, 0) });
         entityManager.SetComponentData(actor, new Hunger { Value = 10 });
         entityManager.SetComponentData(actor, new Health { Value = 100 });
         entityManager.SetComponentData(actor, new Speed { Value = 60f });
         entityManager.SetComponentData(actor, new Translation { Value = new float3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100), 0) });
-        entityManager.SetSharedComponentData(actor, new RenderMesh { mesh = quadMesh, material = actorMaterial });
+        entityManager.SetSharedComponentData(actor, new RenderMesh { mesh = SimpleGraphics.CreateMesh(24, 48), material = characterMaterial });
+
     }
 
-    public void SpawnVendor()
+    public void SpawnFood()
     {
-        Entity vendor = entityManager.CreateEntity(
+        Entity food = entityManager.CreateEntity(
             typeof(ActorTag),
-            typeof(AABB),
+            typeof(Item),
             typeof(Collision),
-            typeof(Direction),
             typeof(HitBox),
-            typeof(Hunger),
-            typeof(Inventory),
             typeof(LocalToWorld),
             typeof(RenderMesh),
-            typeof(Speed),
-            typeof(Translation),
-            typeof(Velocity)
+            typeof(Translation)
             );
 
-        entityManager.SetComponentData(vendor, new AABB { Position = new float3(-8, -16, 0), Size = new float3(16, 8, 0) });
-        entityManager.SetComponentData(vendor, new Speed { Value = 60f });
-        entityManager.SetComponentData(vendor, new Translation { Value = new float3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100), 0) });
-        entityManager.SetSharedComponentData(vendor, new RenderMesh { mesh = quadMesh, material = vendorMaterial });
+        entityManager.SetComponentData(food, new Collision { Position = new float3(-4, -4, 0), Size = new float3(8, 8, 0) });
+        entityManager.SetComponentData(food, new HitBox { Position = new float3(-8, -8, 0), Size = new float3(8, 8, 0) });
+        entityManager.SetComponentData(food, new Translation { Value = new float3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100), 0) });
+        entityManager.SetSharedComponentData(food, new RenderMesh { mesh = SimpleGraphics.CreateMesh(16, 16), material = foodMaterial });
+
     }
 
     void Update()

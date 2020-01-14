@@ -1,19 +1,18 @@
 ﻿using Unity.Mathematics;
-using Unity.Physics;
 
 public static class SimplePhysics
 {
-    public static bool Intersection(float3x2 box1, float3x2 box2)
+    public static bool Intersection(AABB box1, AABB box2)
     {
-        return (box1.c0.x <= box2.c1.x && box1.c1.x >= box2.c0.x - 1f) &&
-               (box1.c0.y <= box2.c1.y && box1.c1.y >= box2.c0.y);
+        return (box1.Min.x <= box2.Max.x && box1.Max.x >= box2.Min.x) &&
+               (box1.Min.y <= box2.Max.y && box1.Max.y >= box2.Min.y);
     }
-    public static bool4 Collision(float3x2 box1, float3x2 box2)
+    public static bool4 Collision(AABB box1, AABB box2)
     {
-        float tc = math.abs(box1.c1.y - box2.c0.y);
-        float bc = math.abs(box2.c1.y - box1.c0.y);
-        float lc = math.abs(box1.c0.x - box2.c1.x);
-        float rc = math.abs(box2.c0.x - box1.c1.x);
+        float tc = math.abs(box1.Max.y - box2.Min.y);
+        float bc = math.abs(box2.Max.y - box1.Min.y);
+        float lc = math.abs(box1.Min.x - box2.Max.x);
+        float rc = math.abs(box2.Min.x - box1.Max.x);
 
         return new bool4
         {
