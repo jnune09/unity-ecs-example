@@ -4,20 +4,20 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
-using static Unity.Mathematics.math;
+//using static Unity.Mathematics.math;
 
 // @update!
-public class PickUpSystem : JobComponentSystem
+public class ItemSystem : JobComponentSystem
 {
-    struct PickUpSystemJob : IJobForEachWithEntity<Item, PickUp, Translation>
+    struct ItemSystemJob : IJobForEachWithEntity<Item>
     {
-        [ReadOnly] public BufferFromEntity<Inventory> inventoryData;
+        public float deltaTime;
+
         public EntityCommandBuffer.Concurrent buffer;
 
-        public void Execute(Entity entity, int index, [ReadOnly] ref Item item, ref PickUp pickUp, ref Translation translation)
+        public void Execute(Entity entity, int index, ref Item item)
         {
-            buffer.AddComponent(index, pickUp.Value, new Hold { Item = entity }) ;
-            translation.Value += new float3(0,0.2f,0);
+
         }
     }
 
@@ -25,8 +25,6 @@ public class PickUpSystem : JobComponentSystem
 
     protected override void OnCreate()
     {
-
-
         endSimulationBuffer = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
 
         base.OnCreate();
@@ -34,10 +32,11 @@ public class PickUpSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = new PickUpSystemJob
+        var job = new ItemSystemJob
         {
+            deltaTime = UnityEngine.Time.deltaTime,
+
             buffer = endSimulationBuffer.CreateCommandBuffer().ToConcurrent(),
-            inventoryData = GetBufferFromEntity<Inventory>(true)
         };
 
         var jobHandle = job.Schedule(this, inputDeps);

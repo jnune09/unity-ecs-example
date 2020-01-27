@@ -4,8 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
-public struct Item : IComponentData
+public struct Destination : IComponentData
 {
-    public int Id;
-    public int SerialNumber;
+    public float3 Value;
 }

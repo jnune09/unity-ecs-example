@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
-public struct PickUp : IComponentData
+public struct Conveyor : IComponentData
 {
-    public Entity Value;
+    public Entity Entity;
 }

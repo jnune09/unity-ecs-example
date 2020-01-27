@@ -9,21 +9,28 @@ using static Unity.Mathematics.math;
 // @update!
 public class ActionSystem : JobComponentSystem
 {
-    struct ActionSystemJob : IJobForEachWithEntity<ActionBox>
+    struct ActionSystemJob : IJobForEachWithEntity<ActionBox, Translation>
     {
         public EntityCommandBuffer.Concurrent buffer;
-        public void Execute(Entity entity, int index, [ReadOnly] ref ActionBox actionBox)
+        [ReadOnly] public ComponentDataFromEntity<Item> itemData;
+        public void Execute(Entity entity, int index, [ReadOnly] ref ActionBox actionBox, [ReadOnly] ref Translation translation)
         {
             if (actionBox.CoActor != Entity.Null && actionBox.ActionID != 0)
             {
                 if (actionBox.ActionID == 1)
                 {
                     buffer.AddComponent(index, actionBox.CoActor, new Damage { Value = 5f });
-                    buffer.AddComponent(index, actionBox.CoActor, new Target { Entity = entity });
+                    buffer.AddComponent(index, actionBox.CoActor, new Follow { Entity = entity });
                 }
                 if (actionBox.ActionID == 2)
                 {
-                    buffer.AddComponent(index, actionBox.CoActor, new PickUp { Value = entity });
+                    if(itemData.Exists(actionBox.CoActor))
+                    {
+                        Entity item = buffer.CreateEntity(index);
+                        buffer.AddComponent(index, item, itemData[actionBox.CoActor]);
+                        buffer.AddComponent(index, entity, new Carry { Entity = item });
+                        buffer.DestroyEntity(index, actionBox.CoActor);
+                    }
                 }
             }
         }
@@ -43,7 +50,8 @@ public class ActionSystem : JobComponentSystem
     {
         var job = new ActionSystemJob
         {
-            buffer = endSimulationBuffer.CreateCommandBuffer().ToConcurrent()
+            buffer = endSimulationBuffer.CreateCommandBuffer().ToConcurrent(),
+            itemData = GetComponentDataFromEntity<Item>(true)
         };
 
         var jobHandle = job.Schedule(this, inputDeps);

@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
             typeof(Velocity)
             );
 
-        entityManager.GetBuffer<Inventory>(player).Add(new Inventory { Id = 9, Count = 7 });
+        //entityManager.GetBuffer<Inventory>(player).Add(new Inventory { Id = 9, Count = 7 });
 
         entityManager.SetName(player, "Player");
         entityManager.SetComponentData(player, new Collision { Position = new float3(-6, -16, 0), Size = new float3(12, 2, 0) });
@@ -91,10 +91,10 @@ public class GameManager : MonoBehaviour
         Entity food = entityManager.CreateEntity(
             typeof(ActorTag),
             typeof(Item),
-            typeof(Collision),
             typeof(HitBox),
             typeof(LocalToWorld),
             typeof(RenderMesh),
+            typeof(Collision),
             typeof(Translation)
             );
 

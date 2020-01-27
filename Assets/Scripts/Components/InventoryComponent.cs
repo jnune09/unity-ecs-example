@@ -7,6 +7,6 @@ using Unity.Mathematics;
 [InternalBufferCapacity(8)]
 public struct Inventory : IBufferElementData
 {
-    public int Id;
+    public Entity Item;
     public int Count;
 }
